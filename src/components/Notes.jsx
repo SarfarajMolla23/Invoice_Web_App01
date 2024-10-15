@@ -1,10 +1,10 @@
 import React from "react";
 
-export default function () {
+export default function ({notes}) {
   return (
     <>
-      <section className="my-5">
-        <p>Notes to the client...</p>
+      <section className="mb-5">
+        <p className="lg:w-1/2 text-justify">{notes}</p>
       </section>
     </>
   );

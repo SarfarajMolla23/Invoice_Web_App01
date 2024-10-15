@@ -2,5 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 body{
-  background-color: lightgray;
+  background-color: lightslategray;
+}
+
+button{
+  user-select: none;
+}
+.footer li{
+  margin: 0.5rem 0.2rem;
 }
