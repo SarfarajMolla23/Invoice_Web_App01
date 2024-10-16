@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 
 import Footer from "./components/Footer.jsx";
 import Notes from "./components/Notes.jsx";
@@ -10,25 +11,29 @@ import Header from "./components/Header.jsx";
 import TableForm from "./components/TableForm.jsx";
 
 function App() {
-  const [showInvoice, setshowInvoice] = useState(true);
-  const [name, setName] = useState("Sarfaraj Molla");
-  const [address, setAddress] = useState("India");
-  const [email, setEmail] = useState("sarfaraj@gmail.com");
-  const [phone, setPhone] = useState("12334456778");
-  const [bankName, setBankName] = useState("sarfaraj molla");
-  const [bankAccount, setBankAccount] = useState("123 456 789");
-  const [website, setWebsite] = useState("https://sarfaraj.co.in");
-  const [clientName, setClientName] = useState("Raju");
-  const [clientAddress, setClientAddress] = useState("India");
-  const [invoiceNumber, setInvoiceNumber] = useState("123 456 7890");
-  const [invoiceDate, setInvoiceDate] = useState("23/11/2024");
-  const [dueDate, setDueDate] = useState("31/11/2024");
-  const [notes, setNotes] = useState("Pay Fast");
+  const [showInvoice, setShowInvoice] = useState(false);
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [bankName, setBankName] = useState(" ");
+  const [bankAccount, setBankAccount] = useState("");
+  const [website, setWebsite] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [clientAddress, setClientAddress] = useState("");
+  const [invoiceNumber, setInvoiceNumber] = useState("");
+  const [invoiceDate, setInvoiceDate] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [notes, setNotes] = useState("");
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
   const [amount, setAmount] = useState("");
   const [list, setList] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  const contentRef = useRef(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
 
   return (
     <>
@@ -37,50 +42,61 @@ function App() {
       xl:mx-w-4xl bg-white rounded shadow p-5"
       >
         {showInvoice ? (
-          <div>
-            <Header />
+          <>
+            <button
+              className=" bg-blue-500 text-white font-bold py-2 px-8 rounded shadow border-2 border-blue-500 hover:bg-transparent hover:text-blue-500 transition-all duration-300  ml-5"
+              onClick={reactToPrintFn}
+            >
+              Print / Download
+            </button>
 
-            <MainDetails name={name} address={address} />
+            <div ref={contentRef} className="p-5">
+              <Header />
 
-            <ClientDetails
-              clientName={clientName}
-              clientAddress={clientAddress}
-            />
+              <MainDetails name={name} address={address} />
 
-            <Dates
-              invoiceNumber={invoiceNumber}
-              invoiceDate={invoiceDate}
-              dueDate={dueDate}
-            />
+              <ClientDetails
+                clientName={clientName}
+                clientAddress={clientAddress}
+              />
 
-            <Table
-              description={description}
-              quantity={quantity}
-              price={price}
-              amount={amount}
-              list={list}
-              setList={setList}
-            />
+              <Dates
+                invoiceNumber={invoiceNumber}
+                invoiceDate={invoiceDate}
+                dueDate={dueDate}
+              />
 
-            <Notes notes={notes} />
+              <Table
+                description={description}
+                quantity={quantity}
+                price={price}
+                amount={amount}
+                list={list}
+                setList={setList}
+                total={total}
+                setTotal={setTotal}
+              />
 
-            <Footer
-              name={name}
-              address={address}
-              website={website}
-              email={email}
-              phone={phone}
-              bankAccount={bankAccount}
-              bankName={bankName}
-            />
+              <Notes notes={notes} />
+
+              <Footer
+                name={name}
+                address={address}
+                website={website}
+                email={email}
+                phone={phone}
+                bankAccount={bankAccount}
+                bankName={bankName}
+              />
+            </div>
 
             <button
-              onClick={() => setshowInvoice(false)}
+              onClick={() => setShowInvoice(false)}
               className="mt-5 bg-blue-500 text-white font-bold py-2 px-8 rounded shadow border-2 border-blue-500 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
             >
               Edit Information
             </button>
-          </div>
+          </>
         ) : (
           <>
             {/* name, address, client, name, client address, invoise number, invoice date, due date, notes, email, phone number, bank name, bank account number, account holder, website */}
@@ -267,6 +283,8 @@ function App() {
                   setAmount={setAmount}
                   list={list}
                   setList={setList}
+                  total={total}
+                  setTotal={setTotal}
                 />
               </article>
 
@@ -282,7 +300,7 @@ function App() {
               ></textarea>
 
               <button
-                onClick={() => setshowInvoice(true)}
+                onClick={() => setShowInvoice(true)}
                 className="bg-blue-500 text-white font-bold py-2 px-8 rounded shadow border-2 border-blue-500 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
               >
                 Preview Invoice
